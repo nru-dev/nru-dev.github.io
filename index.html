@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silvi - реверс-инженер</title>
+  <meta name="description" content="Резюме Silvi (nru-dev): реверс-инженер, игровые клиенты, низкоуровневая разработка." />
+  <style>
+    /* Alfa Core DS-inspired tokens */
+    :root {
+      --bg: #fcfcfc;
+      --surface: #ffffff;
+      --surface-soft: #f8f8f8;
+      --ink: #000000;
+      --ink-secondary: rgba(0, 0, 0, 0.56);
+      --ink-tertiary: rgba(0, 0, 0, 0.32);
+      --line: rgba(0, 0, 0, 0.08);
+      --line-strong: rgba(0, 0, 0, 0.12);
+      --brand: #ef3124;
+      --brand-hover: #d92b1f;
+      --brand-press: #c4271c;
+      --brand-soft: rgba(239, 49, 36, 0.08);
+      --blue: #0056ff;
+      --green: #31e300;
+      --violet: #6a4dff;
+      --radius-s: 8px;
+      --radius-m: 12px;
+      --radius-l: 16px;
+      --radius-xl: 20px;
+      --radius-pill: 99px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, sans-serif;
+      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
+      --max: 960px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .wrap {
+      width: min(100% - 40px, var(--max));
+      margin-inline: auto;
+    }
+
+    /* ── Header ── */
+    .top {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .top-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-s);
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav a:hover {
+      background: var(--surface-soft);
+      color: var(--ink);
+    }
+
+    .nav a.primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .nav a.primary:hover {
+      background: var(--brand-hover);
+      color: #fff;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 56px 0 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .role {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .lede {
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+      max-width: 36em;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: var(--radius-pill);
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--brand-hover); }
+    .btn-primary:active { background: var(--brand-press); transform: none; }
+
+    .btn-secondary {
+      background: var(--surface-soft);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover { background: #efefef; }
+
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px 32px;
+    }
+
+    .fact dt {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+      color: var(--ink-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .fact dd {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .avatar-wrap {
+      width: 168px;
+    }
+
+    .avatar {
+      width: 168px;
+      height: 168px;
+      border-radius: var(--radius-xl);
+      object-fit: cover;
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .avatar-meta {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-secondary);
+    }
+
+    .avatar-meta strong {
+      display: block;
+      color: var(--ink);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 28px 0;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+      color: var(--ink-tertiary);
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-l);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .about-text {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-secondary);
+    }
+
+    .about-text + .about-text { margin-top: 14px; }
+
+    .about-text strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Skills ── */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill {
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .skill.major {
+      background: var(--brand-soft);
+      border-color: transparent;
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ── Notes carousel ── */
+    .carousel {
+      position: relative;
+    }
+
+    .carousel-viewport {
+      overflow: hidden;
+      border-radius: var(--radius-l);
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.25s ease;
+      gap: 0;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      min-width: 100%;
+      padding: 2px;
+    }
+
+    .note {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-l);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 360px;
+      height: 100%;
+    }
+
+    .note-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note-repo {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand);
+      background: var(--brand-soft);
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+    }
+
+    .note-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .note h3 {
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .note p {
+      font-size: 15px;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+    }
+
+    .snippet {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      background: #0f1115;
+      color: #e8eaed;
+      border-radius: var(--radius-m);
+      padding: 16px 18px;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: auto;
+    }
+
+    .snippet .c { color: rgba(255, 255, 255, 0.38); }
+    .snippet .k { color: #ff7b72; }
+    .snippet .t { color: #79c0ff; }
+    .snippet .n { color: #d2a8ff; }
+    .snippet .s { color: #a5d6ff; }
+    .snippet .f { color: #d2a8ff; }
+
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.16);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .carousel-dot[aria-current="true"] {
+      background: var(--brand);
+      transform: scale(1.15);
+    }
+
+    .carousel-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .carousel-btn:hover:not(:disabled) {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: var(--brand-soft);
+    }
+
+    .carousel-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .carousel-counter {
+      font-size: 13px;
+      color: var(--ink-tertiary);
+      font-variant-numeric: tabular-nums;
+      min-width: 3.5em;
+    }
+
+    /* ── Projects ── */
+    .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px 24px;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-l);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .project h3 {
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .project h3 a:hover {
+      color: var(--brand);
+    }
+
+    .project-meta {
+      font-size: 13px;
+      color: var(--ink-tertiary);
+      margin-bottom: 12px;
+    }
+
+    .project p {
+      color: var(--ink-secondary);
+      font-size: 15px;
+      max-width: 58em;
+      margin-bottom: 14px;
+    }
+
+    .project-side {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      min-width: 140px;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .stack span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      background: var(--surface-soft);
+      border-radius: var(--radius-pill);
+      padding: 6px 10px;
+    }
+
+    .link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--brand);
+      white-space: nowrap;
+    }
+
+    .link:hover { text-decoration: underline; }
+
+    /* ── Contact ── */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      padding: 16px 18px;
+      min-width: 220px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .contact-item:hover { border-color: var(--line-strong); }
+
+    .contact-item .label {
+      font-size: 12px;
+      color: var(--ink-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+    }
+
+    .contact-item .value {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot.red { background: var(--brand); }
+    .dot.blue { background: var(--blue); }
+    .dot.violet { background: var(--violet); }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 24px;
+      padding: 28px 0 40px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-tertiary);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .note {
+        min-height: 0;
+        padding: 22px;
+      }
+
+      .snippet {
+        font-size: 11px;
+      }
+
+      .avatar-wrap {
+        order: -1;
+        width: 120px;
+      }
+
+      .avatar {
+        width: 120px;
+        height: 120px;
+      }
+
+      .project {
+        grid-template-columns: 1fr;
+      }
+
+      .project-side {
+        align-items: flex-start;
+        min-width: 0;
+      }
+
+      .nav a:not(.primary) {
+        display: none;
+      }
+
+      .hero { padding-top: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark">S</span>
+        <span>nru-dev</span>
+      </a>
+      <nav class="nav">
+        <a href="#about">Обо мне</a>
+        <a href="#skills">Навыки</a>
+        <a href="#notes">Заметки</a>
+        <a href="#projects">Проекты</a>
+        <a class="primary" href="#contact">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="role">Реверс-инженер</div>
+          <h1>Silvi</h1>
+          <p class="lede">
+            Разбираю игровые клиенты и низкоуровневые протоколы, восстанавливаю
+            недокументированные внутренности и делаю на этом рабочие инструменты:
+            от инъекций и хуков до полноценных серверных игровых систем.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/nru-dev" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn btn-secondary" href="#projects">Смотреть проекты</a>
+          </div>
+          <dl class="facts">
+            <div class="fact">
+              <dt>Специализация</dt>
+              <dd>Reverse engineering</dd>
+            </div>
+            <div class="fact">
+              <dt>Основной стек</dt>
+              <dd>Rust, Java</dd>
+            </div>
+            <div class="fact">
+              <dt>Публичных репозиториев</dt>
+              <dd>3</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="avatar-wrap">
+          <img
+            class="avatar"
+            src="https://avatars.githubusercontent.com/u/50168364?v=4"
+            alt="Аватар GitHub nru-dev"
+            width="168"
+            height="168"
+          />
+          <div class="avatar-meta">
+            <strong>nru-dev</strong>
+            github.com/nru-dev
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap">
+        <h2 class="section-title">Обо мне</h2>
+        <div class="card">
+          <p class="about-text">
+            Меня зовут <strong>Silvi</strong>. Занимаюсь реверсом игровых клиентов
+            и системной разработкой под Windows. Мне интересно то, что обычно
+            остаётся за кадром: структуры, вызовные соглашения, графические хуки,
+            память процесса.
+          </p>
+          <p class="about-text">
+            В работе опираюсь на живой бинарник, а не только на документацию.
+            Предпочитаю аккуратные решения: валидированные оффсеты, обратимые
+            хуки, воспроизводимые сборки с контрольными суммами и понятную
+            границу между проверенным фактом и гипотезой.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="wrap">
+        <h2 class="section-title">Навыки</h2>
+        <div class="skills">
+          <span class="skill major">Reverse engineering</span>
+          <span class="skill major">Rust</span>
+          <span class="skill major">Java</span>
+          <span class="skill">Windows internals</span>
+          <span class="skill">x86</span>
+          <span class="skill">Direct3D 9</span>
+          <span class="skill">API hooking</span>
+          <span class="skill">Game modding</span>
+          <span class="skill">NeoForge / Minecraft</span>
+          <span class="skill">SQLite</span>
+          <span class="skill">Calling conventions</span>
+          <span class="skill">Disassembly</span>
+          <span class="skill">C / C++ FFI</span>
+          <span class="skill">Git</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes">
+      <div class="wrap">
+        <h2 class="section-title">Разборы · реверс</h2>
+
+        <div class="carousel" id="re-carousel" data-index="0">
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="re-track">
+
+              <div class="carousel-slide">
+                <article class="note">
+                  <div class="note-top">
+                    <span class="note-repo">veyr</span>
+                    <span class="note-tag">d3d9 · x86 · EndScene</span>
+                  </div>
+                  <h3>Перехват EndScene без угадывания адресов</h3>
+                  <p>
+                    Временный хук на CreateDevice, ловим живой vtable устройства
+                    и ставим прямые entry-hooks. Оригинал уезжает в трэмплин,
+                    teardown снимает Reset раньше EndScene.
+                  </p>
+                  <pre class="snippet"><span class="c">// u32 stdcall IDirect3DDevice9::EndScene(IDirect3DDevice9* this)</span>
+<span class="k">static</span> <span class="t">HRESULT</span> <span class="f">__stdcall</span> hooked_end_scene(<span class="t">void</span>* device) {
+    <span class="k">auto</span>* rt = runtime::instance();
+    <span class="k">if</span> (rt && rt->frame_ready(device)) {
+        rt->render_overlay(device);   <span class="c">// player circle / diagnostics</span>
+    }
+    <span class="k">return</span> g_original_end_scene(device);  <span class="c">// trampoline</span>
+}
+
+<span class="c">// install only after capture hooks die</span>
+<span class="t">bool</span> <span class="f">install_renderer_hooks</span>(<span class="t">void</span>* device) {
+    <span class="k">auto</span> vtbl = *(<span class="t">void</span>***)device;
+    <span class="k">auto</span> end_scene = vtbl[<span class="n">42</span>];          <span class="c">// IDirect3DDevice9::EndScene</span>
+    <span class="k">auto</span> reset     = vtbl[<span class="n">16</span>];          <span class="c">// IDirect3DDevice9::Reset</span>
+    <span class="k">return</span> hooks::commit({
+        {end_scene, &hooked_end_scene, &g_original_end_scene},
+        {reset,     &hooked_reset,     &g_original_reset},
+    }, <span class="s">/*fail_closed=*/</span> <span class="k">true</span>);
+}</pre>
+                </article>
+              </div>
+
+              <div class="carousel-slide">
+                <article class="note">
+                  <div class="note-top">
+                    <span class="note-repo">veyr</span>
+                    <span class="note-tag">inject · loader · PE32</span>
+                  </div>
+                  <h3>Инъекция до первого кадра клиента</h3>
+                  <p>
+                    Wow.exe стартует приостановленным, loader поднимает нити
+                    после bootstrap, инжектит veyr.dll и взводит capture-хуки
+                    до создания D3D-устройства.
+                  </p>
+                  <pre class="snippet"><span class="c">// Wow.exe suspended → inject veyr.dll → resume</span>
+<span class="t">int</span> <span class="f">launch_client</span>(<span class="k">const</span> <span class="t">wchar_t</span>* wow_path) {
+    STARTUPINFOW si{<span class="k">sizeof</span>(si)};
+    PROCESS_INFORMATION pi{};
+    CreateProcessW(wow_path, <span class="k">nullptr</span>, <span class="k">nullptr</span>, <span class="k">nullptr</span>,
+                   FALSE, CREATE_SUSPENDED, <span class="k">nullptr</span>, <span class="k">nullptr</span>, &si, &pi);
+
+    <span class="k">auto</span> remote = inject::allocate(pi.hProcess, kDllPath);
+    inject::write_image(pi.hProcess, remote, kDllPath);
+    inject::thread_start(pi.hProcess, remote.load_fn, remote.base);
+
+    <span class="c">// capture hooks armed inside DllMain; resume only after</span>
+    <span class="c">// Direct3DCreate9 trampoline is live - fail-closed</span>
+    <span class="k">if</span> (!capture::wait_armed(pi.hProcess, <span class="n">2000</span>)) {
+        capture::abort_suspend(pi.hProcess, pi.hThread);
+        <span class="k">return</span> <span class="n">1</span>;
+    }
+    ResumeThread(pi.hThread);
+    <span class="k">return</span> <span class="n">0</span>;
+}</pre>
+                </article>
+              </div>
+
+              <div class="carousel-slide">
+                <article class="note">
+                  <div class="note-top">
+                    <span class="note-repo">veyr</span>
+                    <span class="note-tag">offsets · CGCamera · build 12340</span>
+                  </div>
+                  <h3>Восстановление world-to-screen</h3>
+                  <p>
+                    Камера собирается из живого CGCamera: базис, FOV и origin
+                    читаются через валидированные смещения. Никаких «средних
+                    значений» - только проверенные поля.
+                  </p>
+                  <pre class="snippet"><span class="c">// recovered field map · build 12340 (x86)</span>
+<span class="k">struct</span> <span class="t">CGCamera</span> {              <span class="c">// size probe: 0x1C0+</span>
+    <span class="t">void</span>*   vtable;        <span class="c">// +0x00  vtable checks only</span>
+    <span class="t">C3Vector</span> origin;        <span class="c">// +0x0C  world position</span>
+    <span class="t">C3Vector</span> right;         <span class="c">// +0x18  basis vectors</span>
+    <span class="t">C3Vector</span> up;
+    <span class="t">C3Vector</span> forward;       <span class="c">// +0x30  look direction</span>
+    <span class="t">float</span>   fov_y;         <span class="c">// +0x54  validated vs live device</span>
+};
+
+<span class="t">bool</span> <span class="f">world_to_screen</span>(<span class="k">const</span> <span class="t">CGCamera</span>& cam, <span class="k">const</span> <span class="t">C3Vector</span>& world,
+                    <span class="t">int</span> w, <span class="t">int</span> h, <span class="t">C2Vector</span>* out) {
+    <span class="k">auto</span> rel = world - cam.origin;
+    <span class="k">auto</span> x = rel.dot(cam.right);
+    <span class="k">auto</span> y = rel.dot(cam.up);
+    <span class="k">auto</span> z = rel.dot(cam.forward);
+    <span class="k">if</span> (z &lt;= <span class="n">0.01f</span>) <span class="k">return</span> <span class="k">false</span>;  <span class="c">// behind camera</span>
+    <span class="k">auto</span> f = <span class="n">1.0f</span> / tanf(cam.fov_y * <span class="n">0.5f</span>);
+    out->x = (x * f / z + <span class="n">1.0f</span>) * w * <span class="n">0.5f</span>;
+    out->y = (<span class="n">1.0f</span> - y * f / z * (w / (<span class="t">float</span>)h)) * h * <span class="n">0.5f</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}</pre>
+                </article>
+              </div>
+
+              <div class="carousel-slide">
+                <article class="note">
+                  <div class="note-top">
+                    <span class="note-repo">veyr</span>
+                    <span class="note-tag">ABI · terrain · fail-closed</span>
+                  </div>
+                  <h3>CGWorldFrame::Intersect - рейк по ландшафту</h3>
+                  <p>
+                    Вызовный контракт восстановлен из бинаря, но path включается
+                    только после живой in-game пробы. Без неё - безопасный
+                    статический круг.
+                  </p>
+                  <pre class="snippet"><span class="c">// native contract recovered from build 12340</span>
+<span class="k">using</span> IntersectFn = <span class="t">bool</span> (<span class="f">__thiscall</span>*)(
+    <span class="t">void</span>* world_frame,
+    <span class="k">const</span> <span class="t">C3Vector</span>& from,
+    <span class="k">const</span> <span class="t">C3Vector</span>& to,
+    <span class="t">uint32_t</span> flags,
+    <span class="t">HitRecord</span>* out);
+
+<span class="t">bool</span> <span class="f">ray_terrain</span>(<span class="t">void</span>* world_frame, <span class="k">const</span> <span class="t">C3Vector</span>& a,
+               <span class="k">const</span> <span class="t">C3Vector</span>& b, <span class="t">HitRecord</span>* hit) {
+    <span class="k">if</span> (!probe::collision_profile_valid()) {
+        <span class="k">return</span> <span class="k">false</span>;  <span class="c">// fail-closed · static ring only</span>
+    }
+    <span class="k">auto</span> fn = <span class="k">reinterpret_cast</span>&lt;IntersectFn&gt;(kIntersect);
+    <span class="t">HitRecord</span> tmp{};
+    <span class="k">if</span> (!fn(world_frame, a, b, kTerrainFlag, &tmp)) <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">if</span> (!validate_hit_record(tmp))      <span class="k">return</span> <span class="k">false</span>;
+    *hit = tmp;
+    <span class="k">return</span> <span class="k">true</span>;
+}</pre>
+                </article>
+              </div>
+
+              <div class="carousel-slide">
+                <article class="note">
+                  <div class="note-top">
+                    <span class="note-repo">veyr</span>
+                    <span class="note-tag">probe · vtable · mapped modules</span>
+                  </div>
+                  <h3>Проверка оффсета перед доверием</h3>
+                  <p>
+                    Смещение - не факт, пока не сошлись mapped-module,
+                    vtable-signature и живой указатель. Иначе адрес
+                    отбрасывается и путь не используется.
+                  </p>
+                  <pre class="snippet"><span class="k">enum class</span> <span class="t">Probe</span> { Unmapped, BadVtable, Untrusted, Trusted };
+
+<span class="t">Probe</span> <span class="f">probe_gx_device</span>(<span class="t">uintptr_t</span> module_base, <span class="t">uintptr_t</span> offset) {
+    <span class="k">auto</span> addr = module_base + offset;
+    <span class="k">if</span> (!is_mapped_readable(addr, <span class="k">sizeof</span>(<span class="t">void</span>*)))
+        <span class="k">return</span> <span class="t">Probe</span>::Unmapped;
+
+    <span class="k">auto</span> object = *<span class="k">reinterpret_cast</span>&lt;<span class="t">void</span>**&gt;(addr);
+    <span class="k">if</span> (!is_mapped_readable(object, <span class="n">32</span> * <span class="k">sizeof</span>(<span class="t">void</span>*)))
+        <span class="k">return</span> <span class="t">Probe</span>::BadVtable;
+
+    <span class="k">auto</span> vtbl = *<span class="k">reinterpret_cast</span>&lt;<span class="t">void</span>***&gt;(object);
+    <span class="k">if</span> (!looks_like_d3d9_device_vtable(vtbl))
+        <span class="k">return</span> <span class="t">Probe</span>::BadVtable;
+
+    <span class="c">// legacy GxDevice offset is never source of truth for hooks</span>
+    <span class="k">return</span> capture::live_device() == object
+        ? <span class="t">Probe</span>::Trusted
+        : <span class="t">Probe</span>::Untrusted;
+}</pre>
+                </article>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="carousel-controls">
+            <div class="carousel-counter"><span id="re-index">1</span> / <span id="re-total">5</span></div>
+            <div class="carousel-dots" id="re-dots"></div>
+            <div class="carousel-nav">
+              <button class="carousel-btn" type="button" id="re-prev" aria-label="Предыдущая заметка">←</button>
+              <button class="carousel-btn" type="button" id="re-next" aria-label="Следующая заметка">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="wrap">
+        <h2 class="section-title">Проекты</h2>
+        <div class="projects">
+          <article class="project">
+            <div>
+              <h3><a href="https://github.com/nru-dev/veyr" target="_blank" rel="noopener">veyr</a></h3>
+              <div class="project-meta">Rust · 2026 · World of Warcraft 3.3.5a</div>
+              <p>
+                Инъекционный рантайм и тулинг для легаси-игрового клиента (build 12340).
+                Ранний захват D3D9-устройства, обратимые хуки EndScene/Reset,
+                восстановленный ABI камеры и пересечения ландшафта, диагностика
+                мировых кругов. Политика fail-closed: спорные пути не включаются,
+                пока контракт не перепроверен. Сборки публикуются с SHA-256 манифестом.
+              </p>
+              <div class="stack">
+                <span>Rust</span>
+                <span>D3D9</span>
+                <span>x86</span>
+                <span>инъекции</span>
+                <span>game internals</span>
+              </div>
+            </div>
+            <div class="project-side">
+              <a class="link" href="https://github.com/nru-dev/veyr" target="_blank" rel="noopener">Репозиторий →</a>
+            </div>
+          </article>
+
+          <article class="project">
+            <div>
+              <h3><a href="https://github.com/nru-dev/veyloria" target="_blank" rel="noopener">veyloria</a></h3>
+              <div class="project-meta">Java · 2026 · Minecraft NeoForge 1.21.1</div>
+              <p>
+                Серверный RPG-мод: аккаунты и авто-логин, SQLite с миграциями,
+                уровни 1-80, кастомные мобы, спавны, лут, группы и HUD.
+                Опыт, валюта и дроп считаются только на сервере.
+                Вместо ванильного спавна - data-driven пайплайн контента.
+              </p>
+              <div class="stack">
+                <span>Java 21</span>
+                <span>NeoForge</span>
+                <span>SQLite</span>
+                <span>server-authoritative</span>
+              </div>
+            </div>
+            <div class="project-side">
+              <a class="link" href="https://github.com/nru-dev/veyloria" target="_blank" rel="noopener">Репозиторий →</a>
+            </div>
+          </article>
+
+          <article class="project">
+            <div>
+              <h3><a href="https://github.com/nru-dev/xCT-" target="_blank" rel="noopener">xCT-</a></h3>
+              <div class="project-meta">Порт аддона · 2025 · WoW WotLK 3.3.5a</div>
+              <p>
+                Порт xCT+ (floating combat text) на классический клиент WotLK.
+                Совместимость и упаковка под старый API - меньше кода, но та же
+                привычка крипаться в чужие системы и поддерживать их руками.
+              </p>
+              <div class="stack">
+                <span>Lua / addon</span>
+                <span>WotLK</span>
+                <span>порт</span>
+              </div>
+            </div>
+            <div class="project-side">
+              <a class="link" href="https://github.com/nru-dev/xCT-" target="_blank" rel="noopener">Репозиторий →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <h2 class="section-title">Контакты</h2>
+        <div class="contact-row">
+          <a class="contact-item" href="https://github.com/nru-dev" target="_blank" rel="noopener">
+            <span class="dot red"></span>
+            <span>
+              <span class="label">GitHub</span>
+              <span class="value">github.com/nru-dev</span>
+            </span>
+          </a>
+          <a class="contact-item" href="https://twitter.com/0xakirun" target="_blank" rel="noopener">
+            <span class="dot blue"></span>
+            <span>
+              <span class="label">X / Twitter</span>
+              <span class="value">@0xakirun</span>
+            </span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© 2026 Silvi</span>
+      <span>nru-dev · GitHub Pages</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.getElementById("re-carousel");
+      if (!root) return;
+
+      var track = document.getElementById("re-track");
+      var slides = Array.prototype.slice.call(track.children);
+      var dotsWrap = document.getElementById("re-dots");
+      var btnPrev = document.getElementById("re-prev");
+      var btnNext = document.getElementById("re-next");
+      var idxEl = document.getElementById("re-index");
+      var totalEl = document.getElementById("re-total");
+      var index = 0;
+
+      totalEl.textContent = String(slides.length);
+
+      slides.forEach(function (_, i) {
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "carousel-dot";
+        dot.setAttribute("aria-label", "Слайд " + (i + 1));
+        dot.addEventListener("click", function () {
+          go(i);
+        });
+        dotsWrap.appendChild(dot);
+      });
+
+      function go(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        track.style.transform = "translateX(" + (-index * 100) + "%)";
+        idxEl.textContent = String(index + 1);
+        btnPrev.disabled = index === 0;
+        btnNext.disabled = index === slides.length - 1;
+
+        Array.prototype.forEach.call(dotsWrap.children, function (dot, i) {
+          if (i === index) {
+            dot.setAttribute("aria-current", "true");
+          } else {
+            dot.removeAttribute("aria-current");
+          }
+        });
+      }
+
+      btnPrev.addEventListener("click", function () {
+        go(index - 1);
+      });
+      btnNext.addEventListener("click", function () {
+        go(index + 1);
+      });
+
+      var touchX = null;
+      track.addEventListener(
+        "touchstart",
+        function (e) {
+          touchX = e.changedTouches[0].clientX;
+        },
+        { passive: true }
+      );
+      track.addEventListener(
+        "touchend",
+        function (e) {
+          if (touchX === null) return;
+          var dx = e.changedTouches[0].clientX - touchX;
+          touchX = null;
+          if (Math.abs(dx) < 40) return;
+          go(index + (dx < 0 ? 1 : -1));
+        },
+        { passive: true }
+      );
+
+      go(0);
+    })();
+  </script>
+</body>
+</html>
